@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rectangle Drawer Pro</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --secondary: #3f37c9;
+      --dark: #1b263b;
+      --light: #f8f9fa;
+      --gray: #adb5bd;
+      --success: #4cc9f0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background-color: #f5f7fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      display: flex;
+      flex-direction: column;
+      color: var(--dark);
+    }
+
+    .header {
+      padding: 1.5rem;
+      background: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+      text-align: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--success));
+      opacity: 0.8;
+    }
+
+    #container {
+      flex: 1;
+      position: relative;
+      background-color: white;
+      background-image: 
+        linear-gradient(#e9ecef 1px, transparent 1px),
+        linear-gradient(90deg, #e9ecef 1px, transparent 1px);
+      background-size: 24px 24px;
+      cursor: crosshair;
+      margin: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+        0 2px 4px -1px rgba(0, 0, 0, 0.02),
+        inset 0 0 20px rgba(0, 0, 0, 0.02);
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    #container:hover {
+      box-shadow: 
+        0 10px 15px -3px rgba(0, 0, 0, 0.05), 
+        0 4px 6px -2px rgba(0, 0, 0, 0.02),
+        inset 0 0 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .box {
+      position: absolute;
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+
+    .box:hover {
+      box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px) scale(1.01);
+      z-index: 10;
+      border-color: white;
+    }
+
+    .footer {
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--gray);
+      background-color: white;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      letter-spacing: 0.25px;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .footer strong {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    @media (min-width: 768px) {
+      .footer {
+        flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="header">✏️ Rectangle Drawer</div>
+  <div id="container" onclick="observeMouse(event, this)"></div>
+  <div class="footer">
+    <span>Created by <strong>Muhammad Bakhtawar Khan</strong>, student of SMIT</span>
+    <span>Trainer: <strong>Sir Ahmed Ashraf</strong></span>
+  </div>
+
+  <script>
+    var topval = null;
+    var leftVal = null;
+
+    function colorValue() {
+      return Math.floor(Math.random() * 256);
+    }
+
+    function observeMouse(event, div) {
+      const rect = div.getBoundingClientRect();
+      const clientX = event.clientX - rect.left;
+      const clientY = event.clientY - rect.top;
+
+      if (topval === null && leftVal === null) {
+        topval = clientY;
+        leftVal = clientX;
+      } else {
+        var color = `rgba(${colorValue()}, ${colorValue()}, ${colorValue()}, 0.5)`;
+        let height = Math.abs(topval - clientY);
+        let width = Math.abs(leftVal - clientX);
+        let top = Math.min(topval, clientY);
+        let left = Math.min(leftVal, clientX);
+
+        div.innerHTML += `<div class='box' style="
+          height: ${height}px;
+          width: ${width}px;
+          top: ${top}px;
+          left: ${left}px;
+          background-color: ${color};
+        "></div>`;
+
+        topval = null;
+        leftVal = null;
+      }
+    }
+  </script>
+</body>
+</html>
